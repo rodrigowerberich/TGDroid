@@ -29,57 +29,56 @@ double voltas = 0;
 
 #define pot 50
 
-void setup(){
 
-pinMode(IN1_E, OUTPUT);
-pinMode(IN2_E, OUTPUT);
-pinMode(IN1_D, OUTPUT);
-pinMode(IN2_D, OUTPUT);
-pinMode(PWM_E, OUTPUT);
-pinMode(PWM_D, OUTPUT);
 
-pinMode(encoder0PinA, INPUT); 
-pinMode(encoder0PinB, INPUT); 
+void doEncoderA(){
 
-// encoder pin on interrupt 0 (pin 2)
- attachInterrupt(0, doEncoderA, CHANGE);
-// encoder pin on interrupt 1 (pin 3)
- attachInterrupt(1, doEncoderB, CHANGE);  
- 
- Serial.begin (9600);
- Serial.println("Start");
-
+  // look for a low-to-high on channel A
+  if (digitalRead(encoder0PinA) == HIGH) { 
+    // check channel B to see which way encoder is turning
+    if (digitalRead(encoder0PinB) == LOW) {  
+      encoder0Pos = encoder0Pos + 1;         // CW
+    } 
+    else {
+      encoder0Pos = encoder0Pos - 1;         // CCW
+    }
+  }
+  else   // must be a high-to-low edge on channel A                                       
+  { 
+    // check channel B to see which way encoder is turning  
+    if (digitalRead(encoder0PinB) == HIGH) {   
+      encoder0Pos = encoder0Pos + 1;          // CW
+    } 
+    else {
+      encoder0Pos = encoder0Pos - 1;          // CCW
+    }
+  }
+  //Serial.println (encoder0Pos, DEC);          
+  // use for debugging - remember to comment out
 }
 
-void loop(){
+void doEncoderB(){
 
-delay(1000);
-frente(pot,pot);
-//delay(500);
-delay(2000);
-parar();
-delay(3000);
-
-voltas = encoder0Pos/1632.67;
-Serial.println (encoder0Pos, DEC);
-Serial.print ("VOLTAS: "); Serial.println (voltas); 
-delay(400);
-
-//delay(500);
-//tras(pot,pot);
-//delay(3000);
-//parar();
-//delay(500);
-//direita(pot,pot);
-//delay(3000);
-//parar();
-//delay(500);
-//esquerda(pot,pot);
-//delay(3000);
-//parar();
-//delay(500);
-
-
+  // look for a low-to-high on channel B
+  if (digitalRead(encoder0PinB) == HIGH) {   
+   // check channel A to see which way encoder is turning
+    if (digitalRead(encoder0PinA) == HIGH) {  
+      encoder0Pos = encoder0Pos + 1;         // CW
+    } 
+    else {
+      encoder0Pos = encoder0Pos - 1;         // CCW
+    }
+  }
+  // Look for a high-to-low on channel B
+  else { 
+    // check channel B to see which way encoder is turning  
+    if (digitalRead(encoder0PinA) == LOW) {   
+      encoder0Pos = encoder0Pos + 1;          // CW
+    } 
+    else {
+      encoder0Pos = encoder0Pos - 1;          // CCW
+    }
+  }
 }
 
 
@@ -136,55 +135,62 @@ void parar () {
 
 }
 
+void setup(){
+
+pinMode(IN1_E, OUTPUT);
+pinMode(IN2_E, OUTPUT);
+pinMode(IN1_D, OUTPUT);
+pinMode(IN2_D, OUTPUT);
+pinMode(PWM_E, OUTPUT);
+pinMode(PWM_D, OUTPUT);
+
+pinMode(encoder0PinA, INPUT); 
+pinMode(encoder0PinB, INPUT); 
+
+// encoder pin on interrupt 0 (pin 2)
+ attachInterrupt(0, doEncoderA, CHANGE);
+// encoder pin on interrupt 1 (pin 3)
+ attachInterrupt(1, doEncoderB, CHANGE);  
+ 
+ Serial.begin (9600);
+ Serial.println("Start");
+
+}
+
+void loop(){
+
+delay(1000);
+frente(pot,pot);
+//delay(500);
+delay(2000);
+parar();
+delay(3000);
+
+voltas = encoder0Pos/1632.67;
+Serial.println (encoder0Pos, DEC);
+Serial.print ("VOLTAS: "); Serial.println (voltas); 
+delay(400);
+
+//delay(500);
+//tras(pot,pot);
+//delay(3000);
+//parar();
+//delay(500);
+//direita(pot,pot);
+//delay(3000);
+//parar();
+//delay(500);
+//esquerda(pot,pot);
+//delay(3000);
+//parar();
+//delay(500);
+
+
+}
+
+
 
 //Funções Encoder
 
-void doEncoderA(){
 
-  // look for a low-to-high on channel A
-  if (digitalRead(encoder0PinA) == HIGH) { 
-    // check channel B to see which way encoder is turning
-    if (digitalRead(encoder0PinB) == LOW) {  
-      encoder0Pos = encoder0Pos + 1;         // CW
-    } 
-    else {
-      encoder0Pos = encoder0Pos - 1;         // CCW
-    }
-  }
-  else   // must be a high-to-low edge on channel A                                       
-  { 
-    // check channel B to see which way encoder is turning  
-    if (digitalRead(encoder0PinB) == HIGH) {   
-      encoder0Pos = encoder0Pos + 1;          // CW
-    } 
-    else {
-      encoder0Pos = encoder0Pos - 1;          // CCW
-    }
-  }
-  //Serial.println (encoder0Pos, DEC);          
-  // use for debugging - remember to comment out
-}
 
-void doEncoderB(){
-
-  // look for a low-to-high on channel B
-  if (digitalRead(encoder0PinB) == HIGH) {   
-   // check channel A to see which way encoder is turning
-    if (digitalRead(encoder0PinA) == HIGH) {  
-      encoder0Pos = encoder0Pos + 1;         // CW
-    } 
-    else {
-      encoder0Pos = encoder0Pos - 1;         // CCW
-    }
-  }
-  // Look for a high-to-low on channel B
-  else { 
-    // check channel B to see which way encoder is turning  
-    if (digitalRead(encoder0PinA) == LOW) {   
-      encoder0Pos = encoder0Pos + 1;          // CW
-    } 
-    else {
-      encoder0Pos = encoder0Pos - 1;          // CCW
-    }
-  }
-}
